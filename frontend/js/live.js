@@ -32,6 +32,7 @@
   let sentW = 0, sentH = 0;
   let candidateText = '';
   let candidateCount = 0;
+  let reconnectAttempts = 0;
   const captureCanvas = document.createElement('canvas');
 
   // ---- Settings UI ----------------------------------------------------------
@@ -131,6 +132,7 @@
 
     ws.onopen = () => {
       setConn('on', 'conn.connected');
+      reconnectAttempts = 0;
       sendFrame(); // kick off the send→receive loop
     };
 
@@ -143,7 +145,15 @@
 
     ws.onclose = () => {
       if (running) {
+        reconnectAttempts += 1;
         setConn('err', 'conn.lost');
+        // After a few silent retries, say so loudly — a frozen announcement
+        // box with only a small status-line change reads as "the app thinks
+        // the camera is off" even though it's actively retrying underneath.
+        if (reconnectAttempts === 3) {
+          setAnnouncement('conn.trouble', { quiet: true, isKey: true });
+          Alok.speak('সার্ভারের সাথে সংযোগ হচ্ছে না। চেষ্টা চলছে।', { interrupt: true });
+        }
         setTimeout(() => { if (running) openSocket(); }, 1500);
       } else {
         setConn('', 'conn.none');
@@ -297,6 +307,7 @@
     lastSpoken = '';
     candidateText = '';
     candidateCount = 0;
+    reconnectAttempts = 0;
   }
 
   toggleBtn.addEventListener('click', () => (running ? stop() : start()));

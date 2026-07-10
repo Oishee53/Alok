@@ -1,0 +1,32 @@
+# Render Blueprint for আলোক (Alok).
+# Declares the service as a Docker deploy (reuses the root Dockerfile, which
+# already installs CPU-only torch) and enables lite mode, since Render's
+# free tier (512MB RAM) can't fit two resident YOLO models plus torch's own
+# overhead — see Dockerfile and routes/detect_route.py for details.
+#
+# To use: Render dashboard → New → Blueprint → point at this repo. If you
+# already created the service manually, this file won't retarget it by
+# itself — either recreate it via Blueprint, or in the existing service's
+# Settings confirm Runtime = Docker (not "Python 3") and add ALOK_LITE=true
+# under Environment.
+
+services:
+  - type: web
+    name: alok
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /detect/health
+    envVars:
+      # 320 is ~4x less compute than 640 — necessary on the free tier's
+      # 0.1 CPU, where full-resolution dual inference takes 20+ seconds a
+      # frame. Trade-off: smaller/farther objects get missed; hold notes
+      # closer to the camera.
+      - key: ALOK_IMGSZ
+        value: "320"
+      # If Render's logs show out-of-memory restarts, set this to "true":
+      # it drops the general 80-class model (so NO person/car detection,
+      # banknotes only) in exchange for a smaller footprint.
+      - key: ALOK_LITE
+        value: "false"

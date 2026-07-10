@@ -61,44 +61,48 @@ class YOLOModel:
             print(f"Error loading model: {e}")
             raise
     
-    def predict(self, image, conf_threshold=0.5, iou_threshold=0.45, verbose=False):
+    def predict(self, image, conf_threshold=0.5, iou_threshold=0.45, verbose=False, imgsz=640):
         """
         Run prediction on an image
-        
+
         Args:
             image: Input image (numpy array or path)
             conf_threshold: Confidence threshold for detections
             iou_threshold: IOU threshold for NMS
             verbose: Whether to print verbose output
-            
+            imgsz: Inference resolution; compute scales with its square, so
+                320 is ~4x cheaper than 640 (for very low-CPU hosts)
+
         Returns:
             Results object from YOLO
         """
         if self.model is None:
             raise RuntimeError("Model not loaded")
-        
+
         results = self.model(
             image,
             conf=conf_threshold,
             iou=iou_threshold,
             verbose=verbose,
-            device=self.device
+            device=self.device,
+            imgsz=imgsz
         )
-        
+
         return results
-    
-    def predict_and_parse(self, image, conf_threshold=0.5):
+
+    def predict_and_parse(self, image, conf_threshold=0.5, imgsz=640):
         """
         Run prediction and return parsed results
-        
+
         Args:
             image: Input image
             conf_threshold: Confidence threshold
-            
+            imgsz: Inference resolution (see predict)
+
         Returns:
             dict with boxes, confidences, class_ids, and class_names
         """
-        results = self.predict(image, conf_threshold=conf_threshold)
+        results = self.predict(image, conf_threshold=conf_threshold, imgsz=imgsz)
         
         parsed_results = {
             'boxes': [],

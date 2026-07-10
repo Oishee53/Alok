@@ -26,4 +26,9 @@ COPY --chown=user backend/ .
 COPY --chown=user frontend/ ./frontend/
 
 EXPOSE 7860
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
+# Render (and similar hosts) assign their own port via $PORT and expect the
+# app to bind to it; Hugging Face Spaces doesn't set it, so 7860 is the
+# fallback. --workers 1 is explicit and load-bearing: a second worker would
+# load a second full copy of both YOLO models, doubling memory on hosts
+# that are already tight on RAM (e.g. Render's free 512MB tier).
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-7860} --workers 1"]

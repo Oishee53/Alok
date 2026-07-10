@@ -75,6 +75,10 @@
     'conn.connecting': { bn: 'সংযোগ হচ্ছে…', en: 'Connecting…' },
     'conn.connected': { bn: 'সংযুক্ত', en: 'Connected' },
     'conn.lost':   { bn: 'সংযোগ গেছে — আবার চেষ্টা হচ্ছে…', en: 'Connection lost — retrying…' },
+    'conn.trouble': {
+      bn: 'সার্ভারের সাথে সংযোগ হচ্ছে না। ইন্টারনেট চেক করুন — চেষ্টা চলছে।',
+      en: 'Can’t reach the server. Check your internet — still retrying in the background.',
+    },
     'unit.ms':     { bn: 'মি.সে.', en: 'ms' },
 
     // ---- help page ----

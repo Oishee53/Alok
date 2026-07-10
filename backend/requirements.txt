@@ -1,3 +1,8 @@
+# NOTE for deployment: this file's plain `torch==...` line resolves to the
+# default CUDA build (multi-GB, unnecessary on a CPU host and worse for
+# memory on tight free tiers). For deploys, use the Dockerfile at the repo
+# root (installs the CPU wheel first, then requirements-deploy.txt) rather
+# than running `pip install -r requirements.txt` directly on the host.
 annotated-doc==0.0.3
 annotated-types==0.7.0
 anyio==4.11.0

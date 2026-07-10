@@ -9,11 +9,13 @@ from fastapi.responses import StreamingResponse, FileResponse
 from pydantic import BaseModel
 from typing import List, Optional
 import cv2
+import gc
 import hashlib
 import numpy as np
 import io
 import os
 import tempfile
+import torch
 from pathlib import Path
 
 # Import detection components
@@ -24,14 +26,34 @@ from detection.announcer import describe_detection, generate_announcement, Denom
 # Create router
 router = APIRouter()
 
-# Initialize BOTH models globally (loads once when server starts)
+# Small free hosting tiers (Render free = 512MB RAM) can't fit two resident
+# YOLO models plus torch's own overhead; ALOK_LITE=1 skips the general
+# 80-class model and keeps only the banknote model.
+# Set it in the host's environment variables, not here.
+LITE_MODE = os.environ.get('ALOK_LITE', '').lower() in ('1', 'true', 'yes')
+
+# Inference resolution. Compute scales with the square of this, so 320 is
+# ~4x cheaper than the default 640 — the difference between a frame taking
+# 20+ seconds and a few seconds on Render's free 0.1-CPU instances, at the
+# cost of missing smaller/farther objects. Leave 640 on real hardware.
+try:
+    INFER_IMGSZ = int(os.environ.get('ALOK_IMGSZ', '640'))
+except ValueError:
+    INFER_IMGSZ = 640
+
+# Multi-threaded BLAS/OpenMP inside torch multiplies memory and CPU
+# contention on single-core free-tier boxes; one thread is plenty for
+# single-frame inference and noticeably lowers peak RSS.
+torch.set_num_threads(1)
+
+# Initialize model(s) globally (loads once when server starts)
 models = {}
 
 # Load custom model
 try:
     detection_dir = Path(__file__).parent.parent / 'detection'
     custom_model_path = detection_dir / 'best.pt'
-    
+
     if custom_model_path.exists():
         print(f"✓ Loading CUSTOM model from: {custom_model_path}")
         models['custom'] = YOLOModel(model_path=str(custom_model_path))
@@ -41,15 +63,17 @@ try:
 except Exception as e:
     print(f"✗ Error loading custom model: {e}")
 
-# Load pre-trained YOLOv11 model
-
-try:
-    yolo11_path = Path(__file__).parent.parent / 'detection' / 'yolo11n.pt'
-    print(f"✓ Loading PRE-TRAINED YOLOv11n model from {yolo11_path}...")
-    models['pretrained'] = YOLOModel(model_path=str(yolo11_path))
-    print(f"✓ Pre-trained model loaded with {len(models['pretrained'].get_all_classes())} classes")
-except Exception as e:
-    print(f"✗ Error loading pre-trained model: {e}")
+# Load pre-trained YOLOv11 model (skipped in lite mode to save memory)
+if LITE_MODE:
+    print("→ ALOK_LITE is set: skipping the general 80-class model to save memory")
+else:
+    try:
+        yolo11_path = Path(__file__).parent.parent / 'detection' / 'yolo11n.pt'
+        print(f"✓ Loading PRE-TRAINED YOLOv11n model from {yolo11_path}...")
+        models['pretrained'] = YOLOModel(model_path=str(yolo11_path))
+        print(f"✓ Pre-trained model loaded with {len(models['pretrained'].get_all_classes())} classes")
+    except Exception as e:
+        print(f"✗ Error loading pre-trained model: {e}")
 
 # Set default model
 if 'custom' in models:
@@ -60,6 +84,20 @@ elif 'pretrained' in models:
     print("→ Default model: PRE-TRAINED (yolov11n)")
 else:
     raise RuntimeError("No models could be loaded!")
+
+# Warm up each model with one dummy inference at boot. YOLO does lazy
+# initialization on the first predict, which on a slow host would otherwise
+# land on the user's first camera frame; doing it here also front-loads the
+# peak memory allocation, so an out-of-memory host fails visibly at startup
+# instead of mysteriously mid-session.
+for _name, _model in models.items():
+    try:
+        _model.predict_and_parse(
+            np.zeros((INFER_IMGSZ, INFER_IMGSZ, 3), dtype=np.uint8),
+            conf_threshold=0.5, imgsz=INFER_IMGSZ)
+        print(f"✓ Warmed up {_name} model (imgsz={INFER_IMGSZ})")
+    except Exception as e:
+        print(f"✗ Warmup failed for {_name}: {e}")
 
 # Response models
 class DetectionResult(BaseModel):
@@ -181,11 +219,13 @@ def run_dual_detection(image, confidence=0.5, merge_duplicates=True):
     custom_confidence = max(0.15, confidence - 0.2)
 
     if 'custom' in models:
-        custom_results = models['custom'].predict_and_parse(image, conf_threshold=custom_confidence)
+        custom_results = models['custom'].predict_and_parse(
+            image, conf_threshold=custom_confidence, imgsz=INFER_IMGSZ)
         models_used.append('custom')
 
     if 'pretrained' in models:
-        pretrained_results = models['pretrained'].predict_and_parse(image, conf_threshold=confidence)
+        pretrained_results = models['pretrained'].predict_and_parse(
+            image, conf_threshold=confidence, imgsz=INFER_IMGSZ)
         models_used.append('pretrained')
 
     if custom_results and pretrained_results and merge_duplicates:
@@ -308,18 +348,32 @@ async def websocket_detect(websocket: WebSocket):
     stabilizer = DenominationStabilizer()
 
     def process(frame_bytes):
-        nparr = np.frombuffer(frame_bytes, np.uint8)
-        image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        if image is None:
-            return {'success': False, 'error': 'Invalid image frame'}
-        merged, models_used = run_dual_detection(image, confidence, merge_duplicates)
-        merged = stabilizer.stabilize(merged)
-        return build_detection_payload(merged, image.shape, models_used)
+        try:
+            nparr = np.frombuffer(frame_bytes, np.uint8)
+            image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            if image is None:
+                return {'success': False, 'error': 'Invalid image frame'}
+            merged, models_used = run_dual_detection(image, confidence, merge_duplicates)
+            merged = stabilizer.stabilize(merged)
+            return build_detection_payload(merged, image.shape, models_used)
+        finally:
+            # Free the decoded frame / inference tensors promptly instead of
+            # waiting for GC to notice — matters on memory-constrained hosts
+            # processing a frame every few hundred ms.
+            gc.collect()
 
     try:
         while True:
             frame_bytes = await websocket.receive_bytes()
-            payload = await run_in_threadpool(process, frame_bytes)
+            try:
+                payload = await run_in_threadpool(process, frame_bytes)
+            except Exception as e:
+                # A single bad/oversized frame or a transient inference error
+                # must not kill the whole connection — report it and keep
+                # streaming. (A hard OOM kill from the host OS can't be
+                # caught here; this only guards recoverable errors.)
+                print(f"detect/ws frame error: {e}")
+                payload = {'success': False, 'error': 'Detection failed for this frame'}
             await websocket.send_json(payload)
     except WebSocketDisconnect:
         pass
