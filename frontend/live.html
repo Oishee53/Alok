@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="title.live">লাইভ দেখা — আলোক</title>
+  <meta name="theme-color" content="#0b0a07">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@700;900&family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip">মূল বিষয়ে যান</a>
+
+  <header class="site-header">
+    <a class="brand" href="/">
+      <span class="brand-dot" aria-hidden="true"></span>
+      আলোক
+    </a>
+    <nav class="site-nav" data-i18n-aria="nav.aria" aria-label="প্রধান মেনু">
+      <a href="/" data-i18n="nav.home">হোম</a>
+      <a href="/live.html" aria-current="page" data-i18n="nav.live">লাইভ</a>
+      <a href="/help.html" data-i18n="nav.help">সাহায্য</a>
+      <button class="lang-toggle" id="lang-toggle" type="button">English</button>
+    </nav>
+  </header>
+
+  <main id="main" class="live-main">
+    <div class="camera-stage">
+      <video id="camera" autoplay playsinline muted></video>
+      <canvas id="overlay" aria-hidden="true"></canvas>
+      <p class="stage-note" id="stage-note" data-i18n="live.stagenote">"শুরু করুন" চাপলে ক্যামেরা চালু হবে।</p>
+    </div>
+
+    <p class="announcement quiet" id="announcement" aria-live="polite" role="status">
+      এখনো কিছু দেখা হয়নি।
+    </p>
+
+    <div class="status-row">
+      <span id="conn-status"><span class="status-dot" id="conn-dot"></span><span id="conn-label" data-i18n="conn.none">সংযোগ নেই</span></span>
+      <span id="fps-status"></span>
+    </div>
+
+    <details class="settings">
+      <summary data-i18n="live.settings">সেটিংস</summary>
+      <div class="settings-body">
+        <div>
+          <label for="rate"><span data-i18n="live.rate">কণ্ঠের গতি</span> <span class="value" id="rate-value"></span></label>
+          <input type="range" id="rate" min="0.5" max="1.5" step="0.1">
+        </div>
+        <div>
+          <label for="conf"><span data-i18n="live.conf">সংবেদনশীলতা (কম = বেশি জিনিস ধরবে)</span> <span class="value" id="conf-value"></span></label>
+          <input type="range" id="conf" min="0.25" max="0.8" step="0.05">
+        </div>
+        <div>
+          <label for="interval"><span data-i18n="live.interval">কত ঘন ঘন দেখবে</span> <span class="value" id="interval-value"></span></label>
+          <input type="range" id="interval" min="400" max="2000" step="100">
+        </div>
+      </div>
+    </details>
+
+    <div class="live-controls">
+      <button class="btn btn-primary" id="toggle-btn" type="button">শুরু করুন</button>
+      <button class="btn" id="repeat-btn" type="button" disabled data-i18n="live.repeat">আবার বলুন</button>
+    </div>
+  </main>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/i18n.js"></script>
+  <script src="/js/live.js"></script>
+</body>
+</html>

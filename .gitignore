@@ -1,0 +1,17 @@
+# python
+__pycache__/
+*.pyc
+backend/venv/
+
+# generated at runtime / by tools
+backend/detection/tts_cache/
+synth_dataset/
+raw_notes/
+*.bak
+
+# local tooling
+.claude/
+
+# unused duplicate model (kept locally, not deployed)
+backend/detection/best_1.pt
+backend/yolov8n.pt

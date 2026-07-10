@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="title.help">সাহায্য — আলোক</title>
+  <meta name="theme-color" content="#0b0a07">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@700;900&family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip">মূল বিষয়ে যান</a>
+
+  <header class="site-header">
+    <a class="brand" href="/">
+      <span class="brand-dot" aria-hidden="true"></span>
+      আলোক
+    </a>
+    <nav class="site-nav" data-i18n-aria="nav.aria" aria-label="প্রধান মেনু">
+      <a href="/" data-i18n="nav.home">হোম</a>
+      <a href="/live.html" data-i18n="nav.live">লাইভ</a>
+      <a href="/help.html" aria-current="page" data-i18n="nav.help">সাহায্য</a>
+      <button class="lang-toggle" id="lang-toggle" type="button">English</button>
+    </nav>
+  </header>
+
+  <main id="main" class="prose">
+    <h1 data-i18n="help.h1">ব্যবহারের নিয়ম</h1>
+    <p data-i18n="help.intro">আলোক ফোনের ক্যামেরা দিয়ে <b>লাইভ</b> দেখে — টাকার নোট আর আশপাশের জিনিস চিনে সাথে সাথে বাংলায় বলে শোনায়।</p>
+
+    <h2 data-i18n="help.s1.h">লাইভ মোড</h2>
+    <ul data-i18n="help.s1.body">
+      <li><b>"শুরু করুন"</b> চাপুন — প্রথমবার ক্যামেরার অনুমতি চাইবে, "Allow" দিন।</li>
+      <li>ফোনের পেছনের ক্যামেরা সামনের দিকে ধরুন। আলোক নিজে থেকেই বলতে থাকবে কী দেখছে — <b>কোন জিনিস, কোন দিকে (বামে / সামনে / ডানে), আর খুব কাছে হলে সেটাও</b>।</li>
+      <li><b>টাকা চেনাতে:</b> নোটটা হাতের তালুতে মেলে ধরে ক্যামেরার সামনে আনুন — ১ থেকে ১০০০ টাকার সব নোট চেনে।</li>
+      <li>কোনো ঘোষণা মিস করলে <b>"আবার বলুন"</b> চাপুন।</li>
+      <li>আলোক অনিশ্চিত হলে <b>"সম্ভবত"</b> বলে — তখন আরেকটু কাছে বা ভালো আলোতে ধরুন।</li>
+    </ul>
+
+    <h2 data-i18n="help.s3.h">ভালো ফল পাওয়ার কৌশল</h2>
+    <ul data-i18n="help.s3.body">
+      <li>যথেষ্ট আলো রাখুন — দিনের আলো বা ঘরের বাতি জ্বালিয়ে।</li>
+      <li>ক্যামেরা আর জিনিসের মাঝে <b>এক হাত (আধা মিটার)</b> দূরত্ব রাখুন।</li>
+      <li>শব্দ শুনতে সমস্যা হলে সেটিংসে গিয়ে <b>কণ্ঠের গতি</b> কমিয়ে নিন।</li>
+      <li>স্ক্রিন রিডার (TalkBack) চালু থাকলেও আলোক কাজ করে — ঘোষণাগুলো লেখা হিসেবেও দেখায়, তাই TalkBack সেগুলোও পড়ে শোনাতে পারে।</li>
+    </ul>
+
+    <h2 data-i18n="help.s4.h">ফোনে অ্যাপ হিসেবে রাখা</h2>
+    <ol data-i18n="help.s4.body">
+      <li>Chrome-এ এই ঠিকানা খুলুন।</li>
+      <li>উপরে ডানদিকের মেনু (⋮) চাপুন।</li>
+      <li><b>"Add to Home screen"</b> বেছে নিন।</li>
+    </ol>
+    <p class="notice" data-i18n="help.s4.note">এরপর হোম স্ক্রিনের <b>আলোক</b> আইকন থেকেই অ্যাপের মতো খুলবে — অ্যাপ স্টোর লাগবে না, টাকাও লাগবে না।</p>
+
+    <h2 data-i18n="help.about.h">প্রকল্প সম্পর্কে</h2>
+    <p data-i18n="help.about.body">আলোক দৃষ্টিপ্রতিবন্ধী বাংলাভাষী মানুষের জন্য একটি ওপেন সোর্স সহায়ক অ্যাপ। দুটি YOLO11 মডেল সার্ভারে চলে; ঘোষণা তৈরি হয় দিক, দূরত্ব ও নিশ্চয়তাসহ বাংলায়, আর সেগুলো বলে ফোনের নিজের কণ্ঠ। <a href="/docs">API ডকুমেন্টেশন</a>।</p>
+  </main>
+
+  <footer class="site-footer">
+    <p data-i18n="footer.1">আলোক — দৃষ্টিপ্রতিবন্ধী মানুষের জন্য, বিনামূল্যে।</p>
+  </footer>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/i18n.js"></script>
+</body>
+</html>

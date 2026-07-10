@@ -1,0 +1,5 @@
+venv
+.env
+detection/tts_cache/
+snapshots/
+__pycache__/

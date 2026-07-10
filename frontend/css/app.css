@@ -1,0 +1,593 @@
+/* ==========================================================================
+   আলোক (Alok) — design system
+   Amber-on-black: the signage palette for low vision. Bengali serif display.
+   ========================================================================== */
+
+:root {
+  --bg: #0b0a07;
+  --surface: #17140e;
+  --surface-2: #201b12;
+  --line: #3a3220;
+  --ink: #fff8eb;
+  --dim: #bfb49c;
+  --light: #ffb800;
+  --light-strong: #ffd34d;
+  --light-deep: #7a5200;
+  --danger: #ff6b5e;
+  --ok: #8fd694;
+
+  --font-display: 'Noto Serif Bengali', 'Nirmala UI', serif;
+  --font-body: 'Noto Sans Bengali', 'Nirmala UI', system-ui, sans-serif;
+
+  --radius: 14px;
+  --tap: 64px; /* minimum touch target */
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  line-height: 1.7;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Visible focus everywhere — this app's users navigate by focus */
+:focus-visible {
+  outline: 4px solid var(--light);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection { background: var(--light); color: var(--bg); }
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--light);
+  color: var(--bg);
+  padding: 1rem 1.5rem;
+  font-weight: 700;
+  z-index: 100;
+}
+.skip-link:focus { left: 0; }
+
+/* --------------------------------------------------------------------------
+   Header / nav
+   -------------------------------------------------------------------------- */
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem clamp(1rem, 4vw, 2.5rem);
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.5rem;
+}
+
+.brand-dot {
+  width: 1.1em;
+  height: 1.1em;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--light-strong), var(--light) 60%, #c98f00);
+  box-shadow: 0 0 14px rgba(255, 184, 0, 0.55);
+  flex: none;
+}
+
+.site-nav { display: flex; gap: 0.25rem; flex-wrap: wrap; align-items: center; }
+
+.lang-toggle {
+  min-height: 48px;
+  padding: 0.35rem 1rem;
+  margin-left: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--light);
+  background: transparent;
+  border: 2px solid var(--light-deep);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.lang-toggle:hover { border-color: var(--light); background: var(--surface); }
+
+.site-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0.4rem 1rem;
+  color: var(--dim);
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 8px;
+}
+.site-nav a:hover { color: var(--ink); background: var(--surface); }
+.site-nav a[aria-current="page"] {
+  color: var(--light);
+  border-bottom: 3px solid var(--light);
+  border-radius: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Landing hero
+   -------------------------------------------------------------------------- */
+
+.hero {
+  text-align: center;
+  padding: clamp(2.5rem, 8vw, 5rem) 1.25rem 2rem;
+  max-width: 46rem;
+  margin: 0 auto;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2.4rem, 8.5vw, 4.4rem);
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+}
+
+.hero h1 em {
+  font-style: normal;
+  color: var(--light);
+}
+
+.hero .tagline {
+  margin-top: 1.25rem;
+  font-size: clamp(1.1rem, 3vw, 1.35rem);
+  color: var(--dim);
+}
+
+.hero .tagline-en {
+  margin-top: 0.4rem;
+  font-size: 1rem;
+  color: var(--dim);
+  opacity: 0.75;
+}
+
+/* --------------------------------------------------------------------------
+   The torch disc — signature element and primary action
+   -------------------------------------------------------------------------- */
+
+.torch-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+  padding: 1.5rem 1.25rem 3.5rem;
+}
+
+.torch {
+  --size: clamp(180px, 46vw, 240px);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.6rem;
+  color: #241800;
+  text-decoration: none;
+  background: radial-gradient(circle at 38% 32%, var(--light-strong), var(--light) 55%, #d29700 100%);
+  box-shadow:
+    0 0 0 6px rgba(255, 184, 0, 0.12),
+    0 0 45px rgba(255, 184, 0, 0.35),
+    0 0 120px rgba(255, 184, 0, 0.18);
+  animation: breathe 4.5s ease-in-out infinite;
+}
+
+.torch small {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.torch:hover, .torch:focus-visible {
+  box-shadow:
+    0 0 0 8px rgba(255, 184, 0, 0.2),
+    0 0 60px rgba(255, 184, 0, 0.5),
+    0 0 150px rgba(255, 184, 0, 0.25);
+}
+
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 0 6px rgba(255,184,0,0.12), 0 0 45px rgba(255,184,0,0.35), 0 0 120px rgba(255,184,0,0.18); }
+  50%      { box-shadow: 0 0 0 10px rgba(255,184,0,0.16), 0 0 70px rgba(255,184,0,0.48), 0 0 160px rgba(255,184,0,0.24); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .torch { animation: none; }
+  * { transition: none !important; }
+}
+
+.secondary-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: var(--tap);
+  padding: 0.8rem 1.8rem;
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  font-weight: 700;
+  border-radius: var(--radius);
+  border: 2px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn:hover { border-color: var(--light-deep); background: var(--surface-2); }
+
+.btn-primary {
+  background: var(--light);
+  border-color: var(--light);
+  color: #241800;
+}
+.btn-primary:hover { background: var(--light-strong); border-color: var(--light-strong); }
+
+.btn-danger {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #2b0703;
+}
+
+.btn-block { width: 100%; }
+
+/* --------------------------------------------------------------------------
+   Landing sections
+   -------------------------------------------------------------------------- */
+
+.section {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.section > h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  margin-bottom: 2rem;
+}
+
+.section > h2::after {
+  content: "";
+  display: block;
+  width: 3.5rem;
+  height: 4px;
+  background: var(--light);
+  margin-top: 0.6rem;
+}
+
+.feature-list { list-style: none; }
+
+.feature-list li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.1rem;
+  padding: 1.4rem 0;
+  border-bottom: 1px solid var(--line);
+  align-items: start;
+}
+.feature-list li:last-child { border-bottom: none; }
+
+.feature-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem;
+}
+
+.feature-list h3 {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--light);
+}
+
+.feature-list p { color: var(--dim); margin-top: 0.25rem; }
+.feature-list p b { color: var(--ink); font-weight: 600; }
+
+/* Steps — a real sequence, so numbers carry meaning */
+.steps { list-style: none; counter-reset: step; }
+
+.steps li {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.1rem;
+  align-items: baseline;
+  padding: 1rem 0;
+}
+
+.steps li::before {
+  content: counter(step, bengali);
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--light);
+  line-height: 1;
+}
+
+.steps h3 { font-size: 1.25rem; font-weight: 700; }
+.steps p { color: var(--dim); }
+
+.site-footer {
+  border-top: 1px solid var(--line);
+  padding: 2rem 1.25rem 3rem;
+  text-align: center;
+  color: var(--dim);
+  font-size: 0.95rem;
+}
+.site-footer a { color: var(--light); }
+
+/* --------------------------------------------------------------------------
+   Live detection page
+   -------------------------------------------------------------------------- */
+
+.live-main {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 70px);
+  max-width: 46rem;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.camera-stage {
+  position: relative;
+  background: #000;
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin: 1rem 1.25rem 0;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--line);
+}
+
+.camera-stage video,
+.camera-stage canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.camera-stage .stage-note {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--dim);
+  font-size: 1.15rem;
+}
+
+/* The spoken words, in writing — aria-live region */
+.announcement {
+  margin: 1rem 1.25rem 0;
+  padding: 1.1rem 1.25rem;
+  min-height: 5.2rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 6px solid var(--light);
+  border-radius: var(--radius);
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.announcement.quiet { color: var(--dim); font-weight: 400; border-left-color: var(--line); }
+
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin: 0.6rem 1.5rem 0;
+  color: var(--dim);
+  font-size: 0.95rem;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--dim);
+  margin-right: 0.45rem;
+  vertical-align: baseline;
+}
+.status-dot.on { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+.status-dot.err { background: var(--danger); }
+
+.live-controls {
+  display: flex;
+  gap: 0.9rem;
+  padding: 1.25rem;
+  margin-top: auto;
+}
+.live-controls .btn { flex: 1; min-height: 76px; font-size: 1.3rem; }
+
+/* Settings */
+.settings {
+  margin: 0 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.settings summary {
+  cursor: pointer;
+  padding: 1rem 1.25rem;
+  font-weight: 700;
+  min-height: var(--tap);
+  display: flex;
+  align-items: center;
+}
+
+.settings-body { padding: 0 1.25rem 1.25rem; display: grid; gap: 1.25rem; }
+
+.settings label { font-weight: 600; display: block; }
+.settings label span.value { color: var(--light); float: right; font-variant-numeric: tabular-nums; }
+
+.settings input[type="range"] {
+  width: 100%;
+  height: 44px;
+  accent-color: var(--light);
+}
+
+/* --------------------------------------------------------------------------
+   Photo (count money) page
+   -------------------------------------------------------------------------- */
+
+.photo-main {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.photo-main h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 6vw, 2.6rem);
+  font-weight: 900;
+}
+.photo-main .lede { color: var(--dim); }
+
+.total-card {
+  background: var(--surface);
+  border: 2px solid var(--light);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.total-card .label { color: var(--dim); font-size: 1.05rem; }
+
+.total-card .amount {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2.6rem, 12vw, 4rem);
+  color: var(--light);
+  line-height: 1.3;
+}
+
+.result-list { list-style: none; display: grid; gap: 0.6rem; }
+
+.result-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.9rem 1.2rem;
+  font-size: 1.15rem;
+}
+
+.result-list .conf { color: var(--dim); font-size: 0.95rem; white-space: nowrap; }
+.result-list li.hedged { border-style: dashed; }
+.result-list li.hedged::after { content: "সম্ভবত"; color: var(--danger); font-size: 0.9rem; }
+
+.photo-preview {
+  width: 100%;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  display: none;
+}
+.photo-preview.show { display: block; }
+
+.hint { color: var(--dim); font-size: 1rem; }
+.hint b { color: var(--ink); }
+
+/* --------------------------------------------------------------------------
+   Help page
+   -------------------------------------------------------------------------- */
+
+.prose {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.prose h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 6vw, 2.8rem);
+  font-weight: 900;
+  margin-bottom: 1rem;
+}
+
+.prose h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--light);
+  margin: 2.25rem 0 0.75rem;
+}
+
+.prose p, .prose li { color: var(--dim); }
+.prose p b, .prose li b { color: var(--ink); font-weight: 600; }
+.prose ul, .prose ol { padding-left: 1.5rem; display: grid; gap: 0.5rem; margin-top: 0.5rem; }
+.prose a { color: var(--light); }
+
+.notice {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 6px solid var(--light);
+  border-radius: var(--radius);
+}
+
+@media (max-width: 480px) {
+  .site-nav a { padding: 0.4rem 0.7rem; font-size: 0.95rem; }
+  .live-controls { flex-direction: column; }
+}

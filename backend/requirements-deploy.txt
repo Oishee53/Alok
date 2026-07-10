@@ -1,0 +1,10 @@
+# Slim server-side dependency set for deployment.
+# torch/torchvision are installed separately from the CPU wheel index
+# (see Dockerfile) so this file must not pull the CUDA build back in.
+fastapi==0.120.4
+uvicorn==0.38.0
+websockets==16.0
+python-multipart==0.0.20
+ultralytics==8.3.223
+opencv-python==4.12.0.88
+gTTS==2.5.4

@@ -1,0 +1,19 @@
+{
+  "name": "আলোক — Alok",
+  "short_name": "আলোক",
+  "description": "ক্যামেরা দিয়ে টাকা ও আশপাশের জিনিস চিনে বাংলায় বলে দেয়।",
+  "lang": "bn",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0a07",
+  "theme_color": "#0b0a07",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "লাইভ দেখা", "url": "/live.html", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

@@ -1,0 +1,8 @@
+backend/venv
+**/__pycache__
+**/*.pyc
+backend/detection/tts_cache
+backend/detection/best_1.pt
+.git
+.claude
+*.md
