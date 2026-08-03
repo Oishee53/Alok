@@ -454,6 +454,21 @@ body {
 }
 .live-controls .btn { flex: 1; min-height: 76px; font-size: 1.3rem; }
 
+/* Recognized text on the Read page — big, calm, high contrast */
+.read-output {
+  margin: 1rem 1.25rem 0;
+  padding: 1.25rem 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  max-height: 40vh;
+  overflow-y: auto;
+}
+
 /* Settings */
 .settings {
   margin: 0 1.25rem;

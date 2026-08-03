@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="title.read">পড়ে শোনাও — আলোক</title>
+  <meta name="theme-color" content="#0b0a07">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@700;900&family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip">মূল বিষয়ে যান</a>
+
+  <header class="site-header">
+    <a class="brand" href="/">
+      <span class="brand-dot" aria-hidden="true"></span>
+      আলোক
+    </a>
+    <nav class="site-nav" data-i18n-aria="nav.aria" aria-label="প্রধান মেনু">
+      <a href="/" data-i18n="nav.home">হোম</a>
+      <a href="/live.html" data-i18n="nav.live">লাইভ</a>
+      <a href="/read.html" aria-current="page" data-i18n="nav.read">পড়ুন</a>
+      <a href="/help.html" data-i18n="nav.help">সাহায্য</a>
+      <button class="lang-toggle" id="lang-toggle" type="button">English</button>
+    </nav>
+  </header>
+
+  <main id="main" class="live-main">
+    <div class="camera-stage">
+      <video id="camera" autoplay playsinline muted></video>
+      <p class="stage-note" id="stage-note" data-i18n="read.stagenote">"ক্যামেরা চালু করুন" চাপুন, তারপর লেখাটা ক্যামেরার সামনে ধরুন।</p>
+    </div>
+
+    <p class="announcement quiet" id="read-status" aria-live="polite" role="status">
+      লেবেল, খবরের কাগজ বা বইয়ের পাতা পড়ে শোনাই।
+    </p>
+
+    <div class="read-output" id="read-output" hidden aria-live="off"></div>
+
+    <div class="live-controls">
+      <button class="btn btn-primary" id="capture-btn" type="button">ক্যামেরা চালু করুন</button>
+      <button class="btn" id="speak-again-btn" type="button" disabled data-i18n="read.again">আবার শোনাও</button>
+      <button class="btn btn-danger" id="stop-btn" type="button" hidden data-i18n="read.stop">থামুন</button>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/i18n.js"></script>
+  <script src="/js/read.js"></script>
+</body>
+</html>

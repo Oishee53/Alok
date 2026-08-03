@@ -625,6 +625,68 @@ def get_classes(model_type: str = Query('both', description="Model to use: 'cust
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# --- Server-side OCR via Gemini (free tier) --------------------------------
+# Tesseract-on-device struggles with Bangla conjuncts and cluttered photos;
+# a vision-language model reads them near-perfectly. Configure GEMINI_API_KEY
+# in the host environment (free key from aistudio.google.com). Without it,
+# this endpoint returns 503 and the frontend falls back to on-device OCR.
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-2.5-flash-lite')
+
+_READ_PROMPT = (
+    "You are the eyes of a blind person who asked you to read something for them. "
+    "Transcribe ALL readable text from the image exactly as printed, in natural "
+    "reading order. Keep the original language and script — Bangla stays Bangla, "
+    "English stays English. Do not translate, summarize, describe the image, or "
+    "add any commentary. Output ONLY the transcribed text. "
+    "If there is no readable text at all, output exactly: NO_TEXT"
+)
+
+@router.post("/read")
+async def read_text(file: UploadFile = File(...)):
+    """OCR an image via Gemini. Returns {'success', 'text', 'engine'};
+    text is '' when the image contains no readable text."""
+    if not GEMINI_API_KEY:
+        raise HTTPException(status_code=503, detail="Server OCR not configured")
+
+    contents = await file.read()
+    mime = file.content_type or 'image/jpeg'
+
+    def call_gemini():
+        import base64
+        import requests as rq
+        body = {
+            'contents': [{
+                'parts': [
+                    {'inline_data': {
+                        'mime_type': mime,
+                        'data': base64.b64encode(contents).decode(),
+                    }},
+                    {'text': _READ_PROMPT},
+                ],
+            }],
+        }
+        resp = rq.post(
+            f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent",
+            params={'key': GEMINI_API_KEY},
+            json=body,
+            timeout=60,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        parts = data['candidates'][0]['content']['parts']
+        return ''.join(p.get('text', '') for p in parts)
+
+    try:
+        text = (await run_in_threadpool(call_gemini)).strip()
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"OCR failed: {e}")
+
+    if text == 'NO_TEXT':
+        text = ''
+    return {'success': True, 'text': text, 'engine': 'gemini'}
+
+
 # Bangla TTS fallback for devices without a local Bangla voice
 # (Android phones have one built in; desktop PCs usually don't).
 _TTS_CACHE_DIR = Path(__file__).parent.parent / 'detection' / 'tts_cache'

@@ -1,16 +1,18 @@
 /* আলোক service worker — cache the app shell so pages open instantly;
    detection requests always go to the network. */
 
-const CACHE = 'alok-shell-v5';
+const CACHE = 'alok-shell-v7';
 const SHELL = [
   '/',
   '/index.html',
   '/live.html',
+  '/read.html',
   '/help.html',
   '/css/app.css',
   '/js/common.js',
   '/js/i18n.js',
   '/js/live.js',
+  '/js/read.js',
   '/manifest.webmanifest',
   '/icons/icon-192.png',
   '/icons/icon-512.png',

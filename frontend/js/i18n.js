@@ -8,6 +8,7 @@
     'skip':        { bn: 'মূল বিষয়ে যান', en: 'Skip to content' },
     'nav.home':    { bn: 'হোম', en: 'Home' },
     'nav.live':    { bn: 'লাইভ', en: 'Live' },
+    'nav.read':    { bn: 'পড়ুন', en: 'Read' },
     'nav.help':    { bn: 'সাহায্য', en: 'Help' },
     'nav.aria':    { bn: 'প্রধান মেনু', en: 'Main menu' },
     'footer.1':    { bn: 'আলোক — দৃষ্টিপ্রতিবন্ধী মানুষের জন্য, বিনামূল্যে।', en: 'Alok — free assistive vision for blind and low-vision people.' },
@@ -81,6 +82,29 @@
     },
     'unit.ms':     { bn: 'মি.সে.', en: 'ms' },
 
+    // ---- read page ----
+    'title.read':  { bn: 'পড়ে শোনাও — আলোক', en: 'Read aloud — Alok' },
+    'read.stagenote': { bn: '"ক্যামেরা চালু করুন" চাপুন, তারপর লেখাটা ক্যামেরার সামনে ধরুন।', en: 'Tap "Turn on camera", then hold the text in front of the camera.' },
+    'read.initial': { bn: 'লেবেল, খবরের কাগজ বা বইয়ের পাতা পড়ে শোনাই।', en: 'Reads labels, newspapers, and book pages aloud.' },
+    'read.startCam': { bn: 'ক্যামেরা চালু করুন', en: 'Turn on camera' },
+    'read.capture': { bn: '📖 পড়ুন', en: '📖 Read this' },
+    'read.working': { bn: 'পড়া হচ্ছে…', en: 'Reading…' },
+    'read.ready':  { bn: 'ক্যামেরা চালু। লেখাটা সামনে ধরে "পড়ুন" চাপুন।', en: 'Camera on. Hold the text in front and tap "Read this".' },
+    'read.loadingOcr': { bn: 'পড়ার ব্যবস্থা চালু হচ্ছে (প্রথমবার একটু সময় লাগে)…', en: 'Preparing the reader (first time takes a moment)…' },
+    'read.progress': { bn: 'পড়া হচ্ছে… {p}%', en: 'Reading… {p}%' },
+    'read.done':   { bn: 'পড়া শেষ — শোনানো হচ্ছে।', en: 'Done — reading it out.' },
+    'read.noText': { bn: 'কোনো লেখা পাওয়া যায়নি। আরো কাছে ধরে, ভালো আলোতে আবার চেষ্টা করুন।', en: 'No text found. Hold it closer, in better light, and try again.' },
+    'read.fail':   { bn: 'পড়া যায়নি — ইন্টারনেট সংযোগ দেখে আবার চেষ্টা করুন।', en: 'Could not read — check your internet connection and try again.' },
+    'read.camfail': { bn: 'ক্যামেরা চালু করা যায়নি। ব্রাউজারে ক্যামেরার অনুমতি দিন।', en: 'Could not open the camera. Allow camera access in the browser.' },
+    'read.again':  { bn: 'আবার শোনাও', en: 'Read it again' },
+    'read.stop':   { bn: 'থামুন', en: 'Stop' },
+    'act.read':    { bn: 'লেখা পড়াও', en: 'Read text' },
+    'feat4.h':     { bn: 'লেখা পড়ে শোনায়', en: 'Reads text aloud' },
+    'feat4.p': {
+      bn: 'ওষুধের লেবেল, খবরের কাগজ, বইয়ের পাতা — ক্যামেরায় ধরে এক চাপেই <b>বাংলা ও ইংরেজি লেখা</b> পড়ে শোনায়।',
+      en: 'Medicine labels, newspapers, book pages — hold them up and one tap reads <b>Bangla and English text</b> aloud.',
+    },
+
     // ---- help page ----
     'title.help':  { bn: 'সাহায্য — আলোক', en: 'Help — Alok' },
     'help.h1':     { bn: 'ব্যবহারের নিয়ম', en: 'How to use Alok' },
@@ -92,6 +116,11 @@
     'help.s1.body': {
       bn: '<li><b>"শুরু করুন"</b> চাপুন — প্রথমবার ক্যামেরার অনুমতি চাইবে, "Allow" দিন।</li>\n<li>ফোনের পেছনের ক্যামেরা সামনের দিকে ধরুন। আলোক নিজে থেকেই বলতে থাকবে কী দেখছে — <b>কোন জিনিস, কোন দিকে (বামে / সামনে / ডানে), আর খুব কাছে হলে সেটাও</b>।</li>\n<li><b>টাকা চেনাতে:</b> নোটটা হাতের তালুতে মেলে ধরে ক্যামেরার সামনে আনুন — ১ থেকে ১০০০ টাকার সব নোট চেনে।</li>\n<li>কোনো ঘোষণা মিস করলে <b>"আবার বলুন"</b> চাপুন।</li>\n<li>আলোক অনিশ্চিত হলে <b>"সম্ভবত"</b> বলে — তখন আরেকটু কাছে বা ভালো আলোতে ধরুন।</li>',
       en: '<li>Tap <b>"Start"</b> — the first time, the browser asks for camera permission; tap "Allow".</li>\n<li>Point the rear camera ahead of you. Alok keeps announcing what it sees — <b>what it is, which direction (left / ahead / right), and when something is very close</b>.</li>\n<li><b>To identify money:</b> lay the note flat on your palm and bring it in front of the camera — it knows every note from ৳1 to ৳1000.</li>\n<li>Missed an announcement? Tap <b>"Say it again"</b>.</li>\n<li>When Alok is unsure it says <b>"possibly"</b> — move closer or find better light.</li>',
+    },
+    'help.read.h': { bn: 'পড়ুন মোড', en: 'Read mode' },
+    'help.read.body': {
+      bn: '<li>লেবেল, খবরের কাগজ বা বইয়ের পাতা <b>ক্যামেরার সামনে সোজা করে ধরুন</b> — এক হাত দূরত্বে।</li>\n<li><b>"পড়ুন"</b> চাপুন। আলোক লেখাটা পড়ে বাংলা বা ইংরেজি — যে ভাষায় লেখা — সেই কণ্ঠে শোনাবে।</li>\n<li>ইন্টারনেট থাকলে ছবিটা নিখুঁত পড়ার জন্য আলোকের সার্ভারে যায়; <b>ইন্টারনেট না থাকলে পড়া ফোনেই হয়</b> (তখন নির্ভুলতা একটু কম)।</li>\n<li>মাঝপথে থামাতে <b>"থামুন"</b>, আবার শুনতে <b>"আবার শোনাও"</b> চাপুন।</li>',
+      en: '<li>Hold the label, newspaper, or book page <b>straight in front of the camera</b>, about an arm’s length away.</li>\n<li>Tap <b>"Read this"</b>. Alok reads the text aloud in whichever language it’s written — Bangla or English.</li>\n<li>With internet, the photo goes to Alok’s server for accurate reading; <b>without internet it’s read on your phone</b> (slightly less accurate).</li>\n<li>Tap <b>"Stop"</b> to pause mid-reading, <b>"Read it again"</b> to repeat.</li>',
     },
     'help.s3.h':   { bn: 'ভালো ফল পাওয়ার কৌশল', en: 'Tips for better results' },
     'help.s3.body': {

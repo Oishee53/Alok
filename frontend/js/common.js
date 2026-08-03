@@ -30,7 +30,9 @@ window.Alok = (() => {
   let bnVoice = null;
   let fallbackAudio = null;
   let speakingNow = false;
-  let pendingText = null; // one slot: the newest waiting announcement wins
+  let pending = null;  // one slot: the newest waiting announcement wins
+  let gen = 0;         // generation counter: stopSpeaking() invalidates
+                       // in-flight callbacks so a cancel can't chain onward
 
   function pickVoice() {
     const voices = speechSynthesis.getVoices();
@@ -39,67 +41,95 @@ window.Alok = (() => {
     return bnVoice;
   }
 
+  function pickEnVoice() {
+    const voices = speechSynthesis.getVoices();
+    return voices.find(v => v.lang && v.lang.toLowerCase().startsWith('en')) || null;
+  }
+
   if ('speechSynthesis' in window) {
     pickVoice();
     speechSynthesis.onvoiceschanged = pickVoice;
   }
 
-  function advance() {
+  function advance(myGen, onend) {
+    if (myGen !== gen) return; // superseded by stopSpeaking or interrupt
     speakingNow = false;
     fallbackAudio = null;
-    if (pendingText) {
-      const next = pendingText;
-      pendingText = null;
-      speakNow(next);
+    if (pending) {
+      const next = pending;
+      pending = null;
+      speakNow(next.text, next.lang, next.onend);
     }
+    if (onend) onend();
   }
 
-  function speakNow(text) {
+  function speakNow(text, lang, onend) {
     speakingNow = true;
+    const myGen = ++gen;
+    const done = () => advance(myGen, onend);
 
-    // Voices load asynchronously — re-check at speak time
-    if ('speechSynthesis' in window && (bnVoice || pickVoice())) {
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'bn-BD';
-      u.voice = bnVoice;
-      u.rate = getSettings().speechRate;
-      u.onend = advance;
-      u.onerror = advance;
-      speechSynthesis.speak(u);
-      return;
+    if ('speechSynthesis' in window) {
+      if (lang === 'en') {
+        // English text: every platform has an English voice
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-US';
+        const v = pickEnVoice();
+        if (v) u.voice = v;
+        u.rate = getSettings().speechRate;
+        u.onend = done;
+        u.onerror = done;
+        speechSynthesis.speak(u);
+        return;
+      }
+      // Bangla: use the device voice when there is one
+      if (bnVoice || pickVoice()) {
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'bn-BD';
+        u.voice = bnVoice;
+        u.rate = getSettings().speechRate;
+        u.onend = done;
+        u.onerror = done;
+        speechSynthesis.speak(u);
+        return;
+      }
     }
 
-    // No local Bangla voice: play server-synthesized audio
+    // No local Bangla voice (typical desktop): server-synthesized audio
     fallbackAudio = new Audio('/detect/tts?text=' + encodeURIComponent(text));
     fallbackAudio.playbackRate = getSettings().speechRate;
-    fallbackAudio.onended = advance;
-    fallbackAudio.onerror = advance;
-    fallbackAudio.play().catch(advance);
+    fallbackAudio.onended = done;
+    fallbackAudio.onerror = done;
+    fallbackAudio.play().catch(done);
   }
 
   /**
-   * Speak Bangla text. The current sentence always finishes; if new text
+   * Speak text aloud. The current sentence always finishes; if new text
    * arrives while speaking, it waits its turn (and newer text replaces it —
-   * only the latest scene is worth hearing). Pass interrupt=true to cut
-   * off the current sentence immediately.
+   * only the latest scene is worth hearing).
+   *
+   * Options:
+   *   interrupt: cut off the current sentence immediately
+   *   lang: 'bn' (default) or 'en' — which voice reads the text
+   *   onend: called when this text finishes (used to chain long readings)
    */
-  function speak(text, { interrupt = false } = {}) {
+  function speak(text, { interrupt = false, lang = 'bn', onend } = {}) {
     if (!text) return;
     if (interrupt) {
       stopSpeaking();
-      speakNow(text);
+      speakNow(text, lang, onend);
       return;
     }
     if (speakingNow) {
-      pendingText = text;
+      pending = { text, lang, onend };
       return;
     }
-    speakNow(text);
+    speakNow(text, lang, onend);
   }
 
   function stopSpeaking() {
-    // Clear state first so the cancel/pause callbacks don't re-speak
-    pendingText = null;
+    // Bump the generation first so in-flight end-callbacks become no-ops
+    gen += 1;
+    pending = null;
     speakingNow = false;
     if ('speechSynthesis' in window) speechSynthesis.cancel();
     if (fallbackAudio) {
